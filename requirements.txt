@@ -4,7 +4,7 @@ flask_sqlalchemy
 google-cloud-storage
 pytesseract
 tesseract
-tesseract-ocr
+# tesseract-ocr
 pandas
 numpy
 opencv-python
