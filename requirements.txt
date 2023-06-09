@@ -1,4 +1,4 @@
-python -m install --upgrade pip
+# python -m install --upgrade pip
 Flask
 flask_sqlalchemy
 google-cloud-storage
