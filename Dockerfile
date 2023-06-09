@@ -16,7 +16,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Expose the application port
-EXPOSE 5000
+EXPOSE 4444
 
 # Set environment variables
 ENV FLASK_APP=app.py
