@@ -43,5 +43,5 @@ jobs:
               --region asia-southeast2 \
               --platform managed \
               --allow-unauthenticated \
-              --port 5000 \
+              --port 4444 \
               --set-env-vars="DB_NAME=${{ secrets.DB_CONNECTIONS }}"
