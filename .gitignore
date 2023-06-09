@@ -1,0 +1,13 @@
+deploy-ocr-model.zip
+
+./__pycache__
+
+.env
+
+credentials.json
+
+deploy-ocr-model.zip
+
+api.py
+
+main.py
