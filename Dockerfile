@@ -1,8 +1,10 @@
 # Base image
-FROM python:3.9
+FROM python:3.10.3
 
 # Set working directory
 WORKDIR /app
+
+RUN pip install --upgrade pip
 
 # Copy requirements.txt
 COPY requirements.txt .
