@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.10.3
+FROM python:3.10.2
 
 # Set working directory
 WORKDIR /app
@@ -23,4 +23,4 @@ ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run the application
-CMD ["flask", "run"]
+CMD gunicorn -b :$PORT app:app
