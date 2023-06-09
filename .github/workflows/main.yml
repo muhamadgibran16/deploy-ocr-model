@@ -44,4 +44,4 @@ jobs:
               --platform managed \
               --allow-unauthenticated \
               --port 5000 \
-              --set-env-vars="DB_NAME=${{ secrets.DB_CONNECTIONS }}"
+              --set-env-vars="DB_CONNECTIONS=${{ secrets.DB_CONNECTIONS }}"
