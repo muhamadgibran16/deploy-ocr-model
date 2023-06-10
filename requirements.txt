@@ -14,5 +14,6 @@ python-dotenv
 werkzeug
 matplotlib
 Pillow
-uvicorn
 gdown
+gunicorn
+# uvicorn

@@ -1,3 +1,4 @@
+from gunicorn.app.base import BaseApplication
 from google.cloud import storage
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
@@ -13,9 +14,10 @@ import uvicorn
 import download
 
 
+
 app = Flask(__name__)
 
-port = int(os.getenv("PORT"))
+# port = int(os.getenv("PORT"))
 
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -125,7 +127,27 @@ def upload_ktp():
 
     return jsonify({'name': name, 'gender': gender}), 200
 
+class Server(BaseApplication):
+    def __init__(self, app, options=None):
+        self.options = options or {}
+        self.application = app
+        super().__init__()
+
+    def load_config(self):
+        for key, value in self.options.items():
+            self.cfg.set(key, value)
+
+    def load(self):
+        return self.application
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    options = {
+        'bind': '0.0.0.0:5000',
+        'workers': 4  # Jumlah worker yang ingin Anda tentukan
+    }
+    server = Server(app, options)
+    server.run()
     download.run()
-    uvicorn.run(app, host="0.0.0.0", port=port, timeout_keep_alive=1200)
+    # app.run(debug=True)
+    # download.run()
+    # uvicorn.run(app, host="0.0.0.0", port=port, timeout_keep_alive=1200)
