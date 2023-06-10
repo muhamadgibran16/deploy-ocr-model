@@ -19,7 +19,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_CONNECTIONS')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+db = SQLAlchemy(app)
+# db.init_app(app)
 # Konfigurasi Google Cloud Storage
 BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
@@ -106,7 +107,7 @@ def update_user_profile(name, gender):
     user_profile.gender = gender
     db.session.commit()
 
-@app.route('/upload-ktp', methods=['PUT'])
+@app.route('/upload-ktp', methods=['PATCH'])
 def upload_ktp():
     if 'file' not in request.files:
         return jsonify({'message': 'No file uploaded'}), 400
