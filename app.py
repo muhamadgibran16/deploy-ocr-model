@@ -125,4 +125,4 @@ def upload_ktp():
 if __name__ == '__main__':
     app.run(debug=True)
     download.run()
-    uvicorn.run(app, host="0.0.0.0", port="5000", timeout_keep_alive=1200)
+    uvicorn.run(app, host="0.0.0.0", port=port, timeout_keep_alive=1200)
