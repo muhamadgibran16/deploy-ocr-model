@@ -6,6 +6,8 @@ WORKDIR /app
 
 RUN pip install --upgrade pip
 
+RUN apt-get update && apt-get install -y tesseract-ocr
+
 # Copy requirements.txt
 COPY requirements.txt .
 
@@ -21,6 +23,7 @@ EXPOSE 5000
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV PYTHONUNBUFFERED=1
 
 # Run the application
-CMD gunicorn -b :$PORT app:app
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]

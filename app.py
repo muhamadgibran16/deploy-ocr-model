@@ -1,22 +1,22 @@
+from google.cloud import storage
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
-import os
-from google.cloud import storage
-import pytesseract
 from PIL import Image
-import re
 from flask_sqlalchemy import SQLAlchemy
 from keras.models import load_model
-import numpy as np
 from models.userModel import User, db
-# import tesseract
+import pytesseract
+import numpy as np
+import re
+import os
+import uvicorn
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # Konfigurasi SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_CONNECTIONS')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONNECTIONS")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -24,9 +24,6 @@ db = SQLAlchemy(app)
 # Konfigurasi Google Cloud Storage
 BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
-
-# Inisialisasi klien penyimpanan Google Cloud Storage
-# storage_client = storage.Client.from_service_account_json('credentials.json')
 
 # Path to service account JSON file
 service_account_path = os.getenv("GCP_CREDENTIALS")
@@ -59,7 +56,6 @@ def postprocess_predictions(predictions):
             bounding_boxes.append(prediction)
     return bounding_boxes
 
-
 def extract_text_within_boxes(image, bounding_boxes):
     extracted_text = []
     for box in bounding_boxes:
@@ -68,7 +64,6 @@ def extract_text_within_boxes(image, bounding_boxes):
             cropped_image)  # Apply OCR to cropped image
         extracted_text.append(text)
     return extracted_text
-
 
 def process_ktp(filename):
     try:
@@ -84,8 +79,8 @@ def process_ktp(filename):
 
         return extracted_text
     
-    except ImportError:
-        return 'Tesseract OCR library is not installed'
+    except Exception as e:
+        return str(e)
 
 
 def extract_data(text_data):
@@ -128,3 +123,4 @@ def upload_ktp():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    uvicorn.run(app, host="0.0.0.0", port="5000", timeout_keep_alive=1200)
