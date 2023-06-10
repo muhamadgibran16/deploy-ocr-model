@@ -10,7 +10,6 @@ import pytesseract
 import numpy as np
 import re
 import os
-import uvicorn
 import download
 
 
