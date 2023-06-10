@@ -12,8 +12,6 @@ import re
 import os
 import download
 
-
-
 app = Flask(__name__)
 
 # port = int(os.getenv("PORT"))
@@ -32,10 +30,10 @@ BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
 
 # Path to service account JSON file
-service_account_path = os.getenv("GCP_CREDENTIALS")
+json_credentials_path = os.getenv("GCP_CREDENTIALS")
 
 # Create Google Cloud Storage client using service account JSON file
-storage_client = storage.Client.from_service_account_json(service_account_path)
+storage_client = storage.Client.from_service_account_json(json_credentials_path)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -108,7 +106,8 @@ def update_user_profile(name, gender):
     db.session.commit()
 
 
-@app.route('/upload-ktp', methods=['PATCH'])
+# @app.route('/upload-ktp/', methods=['POST'])
+@app.put('/upload-ktp/')
 def upload_ktp():
     if 'file' not in request.files:
         return jsonify({'message': 'No file uploaded'}), 400
@@ -147,6 +146,4 @@ if __name__ == '__main__':
     server = Server(app, options)
     server.run()
     download.run()
-    # app.run(debug=True)
-    # download.run()
-    # uvicorn.run(app, host="0.0.0.0", port=port, timeout_keep_alive=1200)
+
