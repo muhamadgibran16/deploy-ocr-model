@@ -1,5 +1,4 @@
 mysqlclient
-mysql-python
 mysql-connector
 Flask
 flask_sqlalchemy
