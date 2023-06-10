@@ -31,6 +31,7 @@ service_account_path = os.getenv("GCP_CREDENTIALS")
 # Create Google Cloud Storage client using service account JSON file
 storage_client = storage.Client.from_service_account_json(service_account_path)
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -56,6 +57,7 @@ def postprocess_predictions(predictions):
             bounding_boxes.append(prediction)
     return bounding_boxes
 
+
 def extract_text_within_boxes(image, bounding_boxes):
     extracted_text = []
     for box in bounding_boxes:
@@ -65,20 +67,21 @@ def extract_text_within_boxes(image, bounding_boxes):
         extracted_text.append(text)
     return extracted_text
 
+
 def process_ktp(filename):
     try:
         image_path = os.path.join(UPLOAD_FOLDER, filename)
         image = Image.open(image_path)
         text = pytesseract.image_to_string(image)
 
-        model = load_model('bounding_ktp.h5')
+        model = load_model('bounding_ktp03.h5')
         processed_image = preprocess_image(image)
         predictions = model.predict(np.expand_dims(processed_image, axis=0))
         bounding_boxes = postprocess_predictions(predictions)
         extracted_text = extract_text_within_boxes(image, bounding_boxes)
 
         return extracted_text
-    
+
     except Exception as e:
         return str(e)
 
@@ -101,6 +104,7 @@ def update_user_profile(name, gender):
     user_profile.name = name
     user_profile.gender = gender
     db.session.commit()
+
 
 @app.route('/upload-ktp', methods=['PATCH'])
 def upload_ktp():
