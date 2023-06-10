@@ -16,13 +16,13 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-# Konfigurasi SQLAlchemy
+# Configuration SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONNECTIONS")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 # db.init_app(app)
-# Konfigurasi Google Cloud Storage
+# Configuration Google Cloud Storage
 BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
 
@@ -32,23 +32,19 @@ service_account_path = os.getenv("GCP_CREDENTIALS")
 # Create Google Cloud Storage client using service account JSON file
 storage_client = storage.Client.from_service_account_json(service_account_path)
 
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 def upload_image_to_bucket(filename):
     bucket = storage_client.bucket(BUCKET_NAME)
     blob = bucket.blob(f'{BUCKET_FOLDER}/{filename}')
     blob.upload_from_filename(os.path.join(UPLOAD_FOLDER, filename))
 
-
 def preprocess_image(image):
     image = image.resize((512, 512))  # Resize image to (512, 512) pixels
     image = np.array(image)  # Convert PIL Image to NumPy array
-    image = image / 255.0  # Normalize pixel values to range [0, 1]
+    image = image / 255.0 
     return image
-
 
 def postprocess_predictions(predictions):
     threshold = 0.5
