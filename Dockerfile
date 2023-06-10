@@ -6,13 +6,13 @@ WORKDIR /app
 
 RUN pip install --upgrade pip
 
-# RUN apt-get update && apt-get install -y tesseract-ocr
-
 # Copy requirements.txt
 COPY requirements.txt .
 
 # Install dependencies
 RUN pip install -r requirements.txt
+
+RUN apt-get update && apt-get install -y tesseract-ocr
 
 # Copy application files
 COPY . .

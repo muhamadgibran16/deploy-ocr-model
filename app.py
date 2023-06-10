@@ -12,7 +12,11 @@ import os
 import uvicorn
 import download
 
+
 app = Flask(__name__)
+
+port = int(os.getenv("PORT"))
+
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -120,7 +124,6 @@ def upload_ktp():
     update_user_profile(name, gender)
 
     return jsonify({'name': name, 'gender': gender}), 200
-
 
 if __name__ == '__main__':
     app.run(debug=True)
