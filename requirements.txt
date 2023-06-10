@@ -1,4 +1,6 @@
-# python -m install --upgrade pip
+mysqlclient
+mysql-python
+mysql-connector
 Flask
 flask_sqlalchemy
 google-cloud-storage
