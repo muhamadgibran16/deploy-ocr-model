@@ -10,6 +10,7 @@ import numpy as np
 import re
 import os
 import uvicorn
+import download
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads/'
@@ -127,4 +128,5 @@ def upload_ktp():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    download.run()
     uvicorn.run(app, host="0.0.0.0", port="5000", timeout_keep_alive=1200)
