@@ -9,7 +9,8 @@ from google.cloud import storage
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models.userModel import User, db
-from gunicorn.app.base import BaseApplication
+from waitress import serve
+# from gunicorn.app.base import BaseApplication
 import download 
 import os
 
@@ -101,26 +102,27 @@ def predict(uid):
     return jsonify({'status': 'failure'}), 400
 
 
-class Server(BaseApplication):
-    def __init__(self, app, options=None):
-        self.options = options or {}
-        self.application = app
-        super().__init__()
+# class Server(BaseApplication):
+#     def __init__(self, app, options=None):
+#         self.options = options or {}
+#         self.application = app
+#         super().__init__()
 
-    def load_config(self):
-        for key, value in self.options.items():
-            self.cfg.set(key, value)
+#     def load_config(self):
+#         for key, value in self.options.items():
+#             self.cfg.set(key, value)
 
-    def load(self):
-        return self.application
+#     def load(self):
+#         return self.application
 
 
 if __name__ == '__main__':
     # app.run(debug=True)
-    options = {
-        'bind': '0.0.0.0:5000',
-        'workers': 4  # Jumlah worker yang ingin Anda tentukan
-    }
-    server = Server(app, options)
-    server.run()
+    # options = {
+    #     'bind': '0.0.0.0:5000',
+    #     'workers': 4  # Jumlah worker yang ingin Anda tentukan
+    # }
+    # server = Server(app, options)
+    # server.run()
+    serve(app, host='0.0.0.0', port=5000)
     download.run()
