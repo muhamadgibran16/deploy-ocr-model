@@ -106,8 +106,8 @@ def update_user_profile(name, gender):
     db.session.commit()
 
 
-# @app.route('/upload-ktp/', methods=['POST'])
-@app.put('/upload-ktp/')
+@app.route('/upload-ktp/', methods=['POST'])
+# @app.put('/upload-ktp/')
 def upload_ktp():
     if 'file' not in request.files:
         return jsonify({'message': 'No file uploaded'}), 400
