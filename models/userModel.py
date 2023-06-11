@@ -5,25 +5,29 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    uid = Column(String)
-    name = Column(String)
-    email = Column(String)
-    telp = Column(String)
-    password = Column(String)
-    nik = Column(String)
-    alamat = Column(String)
-    ttl = Column(Date)
-    gol_darah = Column(String)
-    rhesus = Column(String)
-    gender = Column(String)
-    last_donor = Column(Date)
-    photo = Column(String)
-    refresh_token = Column(Text)
-    verified = Column(Boolean, default=False)
 
-    def __init__(self, id, uid, name, email, telp, password, nik, alamat, ttl, gol_darah, rhesus, gender, last_donor, photo, refresh_token, verified):
-        self.id = id
+    id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.String(100), unique=True)
+    name = db.Column(db.String(100), unique=False, nullable=False)
+    email = db.Column(db.String(100), unique=False, nullable=False)
+    telp = db.Column(db.String(15), unique=False, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    nik = db.Column(db.String(16), unique=False, nullable=False)
+    alamat = db.Column(db.String(255), nullable=False)
+    ttl = db.Column(db.String(100), nullable=False)
+    gol_darah = db.Column(db.String(2), nullable=False)
+    rhesus = db.Column(db.String(1), nullable=False)
+    gender = db.Column(db.String(100), nullable=False)
+    last_donor = db.Column(db.String(100), nullable=False)
+    photo = db.Column(db.String(255), nullable=False)
+    refresh_token = db.Column(db.String(255), nullable=False)
+    verified = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __init__(
+        self, uid=None, name=None, email=None, telp=None, password=None, nik=None, alamat=None,
+        ttl=None, gol_darah=None, rhesus=None, gender=None, last_donor=None, photo=None,
+        refresh_token=None, verified=False
+    ):
         self.uid = uid
         self.name = name
         self.email = email

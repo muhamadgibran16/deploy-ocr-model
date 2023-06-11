@@ -8,7 +8,7 @@ from tensorflow.keras.models import *
 from google.cloud import storage
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from models.userModel import User, db
+from models.bekucupmodel import User, db
 from gunicorn.app.base import BaseApplication
 import download
 import os
