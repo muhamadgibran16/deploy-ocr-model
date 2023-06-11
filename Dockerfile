@@ -12,6 +12,8 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install -r requirements.txt
 
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev
+
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
 RUN apt-get update && apt-get install -y tesseract-ocr
