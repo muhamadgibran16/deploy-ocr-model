@@ -118,11 +118,11 @@ def predict(uid):
 
 if __name__ == '__main__':
     # app.run(debug=True)
-    # options = {
-    #     'bind': '0.0.0.0:5000',
-    #     'workers': 4  # Jumlah worker yang ingin Anda tentukan
-    # }
-    # server = Server(app, options)
-    # server.run()
-    serve(app, host='0.0.0.0', port=5000)
+    options = {
+        'bind': '0.0.0.0:5000',
+        'workers': 4  # Jumlah worker yang ingin Anda tentukan
+    }
+    server = Server(app, options)
+    server.run()
+    # serve(app, host='0.0.0.0', port=5000)
     download.run()
