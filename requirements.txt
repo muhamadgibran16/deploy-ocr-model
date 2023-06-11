@@ -1,5 +1,5 @@
 # mysqlclient
-mysql-connector
+# mysql-connector
 Flask
 flask_sqlalchemy
 google-cloud-storage
@@ -11,7 +11,7 @@ numpy
 opencv-python
 tensorflow
 python-dotenv
-werkzeug
+# werkzeug
 matplotlib
 Pillow
 gdown

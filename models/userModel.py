@@ -22,7 +22,8 @@ class User(db.Model):
     refresh_token = Column(Text)
     verified = Column(Boolean, default=False)
 
-    def __init__(self, uid, name, email, telp, password, nik, alamat, ttl, gol_darah, rhesus, gender, last_donor, photo, refresh_token, verified):
+    def __init__(self, id, uid, name, email, telp, password, nik, alamat, ttl, gol_darah, rhesus, gender, last_donor, photo, refresh_token, verified):
+        self.id = id
         self.uid = uid
         self.name = name
         self.email = email

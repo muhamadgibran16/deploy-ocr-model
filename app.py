@@ -1,129 +1,105 @@
-from gunicorn.app.base import BaseApplication
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+import pytesseract
+import tensorflow as tf
+from tensorflow.keras.layers import *
+from tensorflow.keras.models import *
 from google.cloud import storage
 from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
-from PIL import Image
 from flask_sqlalchemy import SQLAlchemy
-from keras.models import load_model
 from models.userModel import User, db
-import pytesseract
-import numpy as np
-import re
-import os
+from gunicorn.app.base import BaseApplication
 import download
+import os
 
 app = Flask(__name__)
-
-# port = int(os.getenv("PORT"))
-
-UPLOAD_FOLDER = 'uploads/'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # Configuration SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONNECTIONS")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
-# db.init_app(app)
+db.init_app(app)
+
 # Configuration Google Cloud Storage
 BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
 
 # Path to service account JSON file
-json_credentials_path = os.getenv("GCP_CREDENTIALS")
+service_account_path = os.getenv("GCP_CREDENTIALS")
 
 # Create Google Cloud Storage client using service account JSON file
-storage_client = storage.Client.from_service_account_json(json_credentials_path)
+storage_client = storage.Client.from_service_account_json(service_account_path)
+bucket = storage_client.bucket(BUCKET_NAME)
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def upload_image_to_bucket(filename):
-    bucket = storage_client.bucket(BUCKET_NAME)
-    blob = bucket.blob(f'{BUCKET_FOLDER}/{filename}')
-    blob.upload_from_filename(os.path.join(UPLOAD_FOLDER, filename))
-
-def preprocess_image(image):
-    image = image.resize((512, 512))  # Resize image to (512, 512) pixels
-    image = np.array(image)  # Convert PIL Image to NumPy array
-    image = image / 255.0 
-    return image
-
-def postprocess_predictions(predictions):
-    threshold = 0.5
-    bounding_boxes = []
-    for prediction in predictions:
-        if prediction > threshold:
-            bounding_boxes.append(prediction)
-    return bounding_boxes
+model = tf.keras.models.load_model("bounding_ktp03.h5")
+pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract.exe'
 
 
-def extract_text_within_boxes(image, bounding_boxes):
-    extracted_text = []
-    for box in bounding_boxes:
-        cropped_image = image.crop(box)  # Crop image based on bounding box
-        text = pytesseract.image_to_string(
-            cropped_image)  # Apply OCR to cropped image
-        extracted_text.append(text)
-    return extracted_text
-
-
-def process_ktp(filename):
-    try:
-        image_path = os.path.join(UPLOAD_FOLDER, filename)
-        image = Image.open(image_path)
-        text = pytesseract.image_to_string(image)
-
-        model = load_model('bounding_ktp03.h5')
-        processed_image = preprocess_image(image)
-        predictions = model.predict(np.expand_dims(processed_image, axis=0))
-        bounding_boxes = postprocess_predictions(predictions)
-        extracted_text = extract_text_within_boxes(image, bounding_boxes)
-
-        return extracted_text
-
-    except Exception as e:
-        return str(e)
-
-
-def extract_data(text_data):
-    name_pattern = r'Name:\s+(.*)'
-    gender_pattern = r'Gender:\s+(.*)'
-
-    name_match = re.search(name_pattern, text_data)
-    gender_match = re.search(gender_pattern, text_data)
-
-    name = name_match.group(1) if name_match else 'Not found'
-    gender = gender_match.group(1) if gender_match else 'Not found'
-
-    return name, gender
-
-
-def update_user_profile(name, gender):
-    user_profile = User.query.first()
-    user_profile.name = name
-    user_profile.gender = gender
-    db.session.commit()
-
-
-@app.route('/upload-ktp/', methods=['POST'])
-# @app.put('/upload-ktp/')
-def upload_ktp():
+@app.route('/upload-ktp/<uid>', methods=['PATCH'])
+def predict(uid):
     if 'file' not in request.files:
-        return jsonify({'message': 'No file uploaded'}), 400
+        return jsonify({'status': 'failure', 'message': 'No file part in the request'}), 400
 
     file = request.files['file']
-    if not allowed_file(file.filename):
-        return jsonify({'message': 'Invalid file extension'}), 400
+    file_path = 'uploaded_ktp.png'
+    file.save(file_path)
 
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(UPLOAD_FOLDER, filename))
-    upload_image_to_bucket(filename)
-    text_data = process_ktp(filename)
-    name, gender = extract_data(text_data)
-    update_user_profile(name, gender)
+    blob = bucket.blob(f"{BUCKET_FOLDER}/{uid}/ktp.png")
+    blob.upload_from_filename(file_path)
 
-    return jsonify({'name': name, 'gender': gender}), 200
+    img = cv2.imread(file_path, 0)
+    ret, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
+    img = cv2.resize(img, (512, 512))
+    img = np.expand_dims(img, axis=-1)
+    img = img / 255
+
+    img = np.expand_dims(img, axis=0)
+    pred = model.predict(img)
+    pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
+    plt.imshow(pred, cmap='gray')
+    plt.imsave('test_img_mask.png', pred)
+
+    img = cv2.imread('test_img_mask.png', 0)
+    cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
+    ori_img = cv2.imread(file_path)
+    ori_img = cv2.cvtColor(ori_img, cv2.COLOR_BGR2RGB)
+    ori_img = cv2.resize(ori_img, (512, 512))
+
+    roi_img = []
+
+    roi_number = 0
+
+    contours, _ = cv2.findContours(
+        img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours = sorted(contours, key=lambda x: cv2.boundingRect(x)[
+                      0] + cv2.boundingRect(x)[1] * img.shape[1])
+
+    for c in contours:
+        x, y, w, h = cv2.boundingRect(c)
+
+        if w > 50:
+            cv2.rectangle(ori_img, (x, y), (x + w, y + h), (36, 255, 12), 2)
+            ROI = ori_img[y:y + h, x:x + w]
+            roi_img.append(ROI)
+            roi_number += 1
+            if len(roi_img) > 1:
+                nama = pytesseract.image_to_string(
+                    roi_img[0], lang='eng', config='--psm 7')
+                print("Nama: ", nama)
+                jenis_kelamin = pytesseract.image_to_string(
+                    roi_img[1], lang='eng', config='--psm 7')
+                print("Jenis Kelamin: ", jenis_kelamin)
+
+                user = User.query.filter_by(uid=uid).first()
+                user.name = nama
+                user.gender = jenis_kelamin
+                db.session.commit()
+
+                return jsonify({'status': 'success'}), 200
+
+    return jsonify({'status': 'failure'}), 400
+
 
 class Server(BaseApplication):
     def __init__(self, app, options=None):
@@ -138,7 +114,9 @@ class Server(BaseApplication):
     def load(self):
         return self.application
 
+
 if __name__ == '__main__':
+    # app.run(debug=True)
     options = {
         'bind': '0.0.0.0:5000',
         'workers': 4  # Jumlah worker yang ingin Anda tentukan
@@ -146,4 +124,3 @@ if __name__ == '__main__':
     server = Server(app, options)
     server.run()
     download.run()
-
