@@ -9,7 +9,6 @@ tesseract
 pandas
 numpy
 opencv-python
-cv2
 tensorflow
 python-dotenv
 # werkzeug
