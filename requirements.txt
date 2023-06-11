@@ -1,4 +1,4 @@
-mysqlclient
+# mysqlclient
 mysql-connector
 Flask
 flask_sqlalchemy
