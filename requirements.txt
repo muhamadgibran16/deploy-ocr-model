@@ -1,5 +1,6 @@
-# mysqlclient
-# mysql-connector
+pymysql
+mysqlclient
+mysql-connector
 Flask
 flask-sqlalchemy
 sqlalchemy
