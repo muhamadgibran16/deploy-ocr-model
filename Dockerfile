@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y build-essential
 # Install system-level dependencies
 RUN apt-get update && apt-get install -y default-libmysqlclient-dev libgl1-mesa-glx tesseract-ocr
 
+RUN apt-get install -y tesseract-ocr-eng
+
 # Copy requirements.txt
 COPY requirements.txt .
 
