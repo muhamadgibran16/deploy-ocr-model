@@ -9,7 +9,6 @@ from google.cloud import storage
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models.userModel import User, db
-# from waitress import serve
 from gunicorn.app.base import BaseApplication
 import download 
 import os
@@ -27,11 +26,11 @@ BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
 
 # Path to service account JSON file
-service_account_path = os.getenv("GCP_CREDENTIALS")
+# service_account_path = os.getenv("GCP_CREDENTIALS")
 # service_account_path = os.path.join(os.path.dirname(__file__), 'nama_file.json')
 
 # Create Google Cloud Storage client using service account JSON file
-storage_client = storage.Client.from_service_account_json(service_account_path)
+storage_client = storage.Client()
 bucket = storage_client.bucket(BUCKET_NAME)
 
 model = tf.keras.models.load_model("bounding_ktp03.h5")
