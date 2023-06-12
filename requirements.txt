@@ -1,6 +1,4 @@
-pymysql
 mysqlclient
-mysql-connector
 Flask
 flask-sqlalchemy
 sqlalchemy
@@ -18,4 +16,3 @@ matplotlib
 Pillow
 gdown
 gunicorn
-# uvicorn
