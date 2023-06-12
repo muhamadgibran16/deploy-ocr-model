@@ -27,8 +27,8 @@ BUCKET_NAME = 'ember-donor'
 BUCKET_FOLDER = 'userprofile'
 
 # Path to service account JSON file
-# service_account_path = os.getenv("GCP_CREDENTIALS")
-service_account_path = os.path.join(os.path.dirname(__file__), 'nama_file.json')
+service_account_path = os.getenv("GCP_CREDENTIALS")
+# service_account_path = os.path.join(os.path.dirname(__file__), 'nama_file.json')
 
 # Create Google Cloud Storage client using service account JSON file
 storage_client = storage.Client.from_service_account_json(service_account_path)

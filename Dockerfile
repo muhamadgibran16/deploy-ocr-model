@@ -26,7 +26,7 @@ EXPOSE 5000
 
 # Set environment variables
 ENV GCP_CREDENTIALS=/app
-# ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1
 
 # Run the application
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
