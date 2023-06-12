@@ -38,10 +38,8 @@ model = tf.keras.models.load_model("bounding_ktp03.h5")
 
 
 @app.route('/', methods=['GET'])
-
-
-
-
+def home():
+    return "Gokil Mantul Ngebug Njlimet Nyenyenye"
 
 @app.route('/upload-ktp/<uid>', methods=['PATCH'])
 def predict(uid):
