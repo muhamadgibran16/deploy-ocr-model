@@ -6,17 +6,17 @@ WORKDIR /app
 
 RUN pip install --upgrade pip
 
+# Install build tools
+RUN apt-get update && apt-get install -y build-essential
+
+# Install system-level dependencies
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev libgl1-mesa-glx tesseract-ocr
+
 # Copy requirements.txt
 COPY requirements.txt .
 
-RUN apt-get update && apt-get install -y default-libmysqlclient-dev
 # Install dependencies
 RUN pip install -r requirements.txt
-
-
-RUN apt-get update && apt-get install -y libgl1-mesa-glx
-
-RUN apt-get update && apt-get install -y tesseract-ocr
 
 # Copy application files
 COPY . .
@@ -28,6 +28,4 @@ EXPOSE 5000
 # ENV PYTHONUNBUFFERED=1
 
 # Run the application
-# CMD ["python", "app.py"]
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
-# CMD ["waitress-serve", "--port=5000", "app:app"]
