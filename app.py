@@ -30,8 +30,8 @@ storage_client = storage.Client()
 bucket = storage_client.bucket(BUCKET_NAME)
 
 model = tf.keras.models.load_model("bounding_ktp03.h5")
-# pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\\tesseract.exe'
-pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+# pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\\tesseract.exe' # local directory in windows
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # server directory in linux
 
 @app.route('/', methods=['GET'])
 def home():
@@ -40,10 +40,10 @@ def home():
 @app.route('/v1/upload-ktp/<uid>', methods=['PATCH'])
 def predict(uid):
     try:
-        if 'file' not in request.files:
+        if 'image' not in request.files:
             return jsonify({'status': 'failure', 'message': 'No file part in the request'}), 400
 
-        file = request.files['file']
+        file = request.files['image']
         file_path = 'uploaded_ktp.png'
         file.save(file_path)
 
