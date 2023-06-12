@@ -34,7 +34,8 @@ storage_client = storage.Client()
 bucket = storage_client.bucket(BUCKET_NAME)
 
 model = tf.keras.models.load_model("bounding_ktp03.h5")
-pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
 
 @app.route('/', methods=['GET'])
