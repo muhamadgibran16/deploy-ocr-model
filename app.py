@@ -94,12 +94,16 @@ def predict(uid):
                     print("Jenis Kelamin: ", jenis_kelamin)
 
                     user = User.query.filter_by(uid=uid).first()
-                    user.name = nama
-                    user.gender = jenis_kelamin
-                    user.ktp = True
-                    db.session.commit()
 
-                    return jsonify({'success': 'true', 'message': 'Upload KTP Successfully'}), 200
+                    if user:
+                        user.name = nama
+                        user.gender = jenis_kelamin
+                        user.ktp = True
+                        db.session.commit()
+                        return jsonify({'success': 'true', 'message': 'Upload KTP Successfully'}), 200
+                    else:
+                        return jsonify({'status': 'failure', 'message': 'User not found'}), 404
+
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
