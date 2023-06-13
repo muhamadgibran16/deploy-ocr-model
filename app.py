@@ -96,6 +96,7 @@ def predict(uid):
                     user = User.query.filter_by(uid=uid).first()
                     user.name = nama
                     user.gender = jenis_kelamin
+                    user.ktp = True
                     db.session.commit()
 
                     return jsonify({'success': 'true', 'message': 'Upload KTP Successfully'}), 200
