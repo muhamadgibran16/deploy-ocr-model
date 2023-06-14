@@ -4,6 +4,8 @@ FROM python:3.10-slim
 # Set working directory
 WORKDIR /app
 
+ADD https://storage.googleapis.com/ember-donor/model/bounding_ktp03.h5 /app
+
 RUN pip install --upgrade pip
 
 # Install build tools

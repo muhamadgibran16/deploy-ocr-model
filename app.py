@@ -10,8 +10,8 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from models.userModel import User, db
 from gunicorn.app.base import BaseApplication
-import download 
 import os
+# import download 
 
 app = Flask(__name__)
 
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     }
     server = Server(app, options)
     server.run()
-    download.run()
+    # download.run()
