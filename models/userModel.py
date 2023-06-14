@@ -22,11 +22,12 @@ class User(db.Model):
     photo = db.Column(db.String(255), nullable=False)
     refresh_token = db.Column(db.String(255), nullable=False)
     verified = db.Column(db.Boolean, nullable=False, default=False)
+    ktp = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(
         self, uid=None, name=None, email=None, telp=None, password=None, nik=None, alamat=None,
         ttl=None, gol_darah=None, rhesus=None, gender=None, last_donor=None, photo=None,
-        refresh_token=None, verified=False
+        refresh_token=None, verified=False, ktp=False
     ):
         self.uid = uid
         self.name = name
@@ -43,3 +44,4 @@ class User(db.Model):
         self.photo = photo
         self.refresh_token = refresh_token
         self.verified = verified
+        self.ktp = ktp
