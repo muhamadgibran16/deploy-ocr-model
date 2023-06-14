@@ -9,7 +9,6 @@ credentials.json
 deploy-ocr-model.zip
 
 api.py
-
 main.py
 bekucupmodel.py
 test.py

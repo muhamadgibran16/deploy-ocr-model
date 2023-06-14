@@ -34,7 +34,7 @@ model = tf.keras.models.load_model("bounding_ktp03.h5")
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # server directory in linux
 
 @app.route('/', methods=['GET'])
-def home():
+def index():
     return "Gokil Mantul Ngebug Njlimet Nyenyenye"
 
 @app.route('/v1/upload-ktp/<uid>', methods=['PATCH'])
@@ -102,7 +102,6 @@ def predict(uid):
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
-
 
 class Server(BaseApplication):
     def __init__(self, app, options=None):

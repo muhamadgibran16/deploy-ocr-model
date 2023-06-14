@@ -5,13 +5,11 @@ sqlalchemy
 google-cloud-storage
 pytesseract
 tesseract
-# tesseract-ocr
 pandas
 numpy
 opencv-python
 tensorflow
 python-dotenv
-# werkzeug
 matplotlib
 Pillow
 gdown

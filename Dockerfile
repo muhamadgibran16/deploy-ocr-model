@@ -31,10 +31,3 @@ ENV PYTHONUNBUFFERED=1
 
 # Run the application
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
-
-
-
-
-
-
-
