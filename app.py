@@ -123,11 +123,11 @@ class Server(BaseApplication):
 
 
 if __name__ == '__main__':
-     app.run(debug=True)
-    #options = {
-    #    'bind': '0.0.0.0:5000',
-    #    'workers': 4 
-    #}
-    #server = Server(app, options)
-    #server.run()
+    # app.run(debug=True)
+    options = {
+        'bind': '0.0.0.0:5000',
+        'workers': 4 
+    }
+    server = Server(app, options)
+    server.run()
     # download.run()
