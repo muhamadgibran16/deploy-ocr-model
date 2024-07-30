@@ -25,6 +25,11 @@ db.init_app(app)
 BUCKET_NAME = os.getenv("BUCKET_NAME")
 BUCKET_FOLDER = 'user'
 
+db = os.getenv("DATABASE_URL")
+
+print("DATABASE: ", db)
+print("BUCKET NAME: ", BUCKET_NAME)
+
 # Create Google Cloud Storage client using service account JSON file
 storage_client = storage.Client()
 bucket = storage_client.bucket(BUCKET_NAME)
