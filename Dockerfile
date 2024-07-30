@@ -32,5 +32,6 @@ EXPOSE 5000
 ENV PYTHONUNBUFFERED=1
 
 # Run the application
-CMD ["python", "app.py"]
+#CMD ["python", "app.py"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:5000"]
 #CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
