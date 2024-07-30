@@ -16,14 +16,14 @@ import os
 app = Flask(__name__)
 
 # Configuration SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONNECTIONS")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
 # Configuration Google Cloud Storage
-BUCKET_NAME = 'ember-donor'
-BUCKET_FOLDER = 'userprofile'
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+BUCKET_FOLDER = 'user'
 
 # Create Google Cloud Storage client using service account JSON file
 storage_client = storage.Client()
@@ -35,7 +35,7 @@ pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract' # server directory
 
 @app.route('/', methods=['GET'])
 def index():
-    return "Gokil Mantul Ngebug Njlimet Nyenyenye"
+    return "Response Success"
 
 @app.route('/v1/upload-ktp/<uid>', methods=['PATCH'])
 def predict(uid):
@@ -123,11 +123,11 @@ class Server(BaseApplication):
 
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    options = {
-        'bind': '0.0.0.0:5000',
-        'workers': 4 
-    }
-    server = Server(app, options)
-    server.run()
+     app.run(debug=True)
+    #options = {
+    #    'bind': '0.0.0.0:5000',
+    #    'workers': 4 
+    #}
+    #server = Server(app, options)
+    #server.run()
     # download.run()
