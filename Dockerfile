@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.10-slim
+FROM python:3
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,9 @@ RUN apt-get install -y tesseract-ocr-eng
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install -r requirements.txt
+RUN export PYTHONPATH=/usr/bin/python \
+ && pip install -r requirements.txt
+#RUN pip install -r requirements.txt
 
 # Copy application files
 COPY . .
