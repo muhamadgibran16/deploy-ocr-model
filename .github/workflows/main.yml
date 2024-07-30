@@ -13,7 +13,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.APPLICATION }}
+      IMAGE_NAME: asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.APPLICATION }}/${{ secrets.APPLICATION }}:latest
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
       GCP_APP_NAME: ${{ secrets.APPLICATION }}
@@ -40,9 +40,9 @@ jobs:
         id: check_repo
         run: |
           if gcloud artifacts repositories describe ${{ env.GCP_APP_NAME }} --location=asia-southeast2 &>/dev/null; then
-            echo "Repository already exists"
+            echo "::set-output name=repo_exists::true"
           else
-            echo "Repository does not exist"
+            echo "::set-output name=repo_exists::false"
           fi
 
       - name: Create Artifact Registry repository
@@ -61,7 +61,6 @@ jobs:
 
       - name: Push Docker Image to Artifact Registry
         run: docker push $IMAGE_NAME
-
 
       - name: Prepare environment variables
         run: |
@@ -95,7 +94,8 @@ jobs:
         if: failure()
         run: |
           gcloud run services logs read --service=${{ secrets.APPLICATION }} \
-            --region=asia-southeast2 \
+            --region=asia-southeast2
+
 
 #name: donor-go-backend
 
