@@ -21,7 +21,7 @@ COPY requirements.txt .
 
 # Install dependencies
 RUN export PYTHONPATH=/usr/bin/python \
- && pip install -r requirements.txt
+  && pip install -r requirements.txt
 # Copy application files
 COPY . .
 
