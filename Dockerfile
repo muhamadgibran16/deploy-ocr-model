@@ -1,11 +1,11 @@
 # Base image
-FROM python:3.12
+FROM python:3
 
 # Set working directory
 WORKDIR /app
 
 # Add model file from GCS
-ADD https://storage.cloud.google.com/donorgo-bucket/model/bounding_ktp03.h5 /app
+ADD https://storage.googleapis.com/donorgo-bucket/model/bounding_ktp03.h5 /app
 
 # Upgrade pip
 RUN pip install --upgrade pip
