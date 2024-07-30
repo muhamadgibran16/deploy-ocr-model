@@ -1,10 +1,10 @@
 # Base image
-FROM python:3
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-ADD https://storage.cloud.google.com/donorgo-bucket/model/bounding_ktp03.h5 /app
+ADD https://storage.googleapis.com/ember-donor/model/bounding_ktp03.h5 /app
 
 RUN pip install --upgrade pip
 
@@ -22,8 +22,6 @@ COPY requirements.txt .
 # Install dependencies
 RUN export PYTHONPATH=/usr/bin/python \
  && pip install -r requirements.txt
-#RUN pip install -r requirements.txt
-
 # Copy application files
 COPY . .
 
