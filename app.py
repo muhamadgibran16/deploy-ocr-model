@@ -11,7 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 from models.userModel import User, db
 from gunicorn.app.base import BaseApplication
 import os
-# import download 
 
 app = Flask(__name__)
 
